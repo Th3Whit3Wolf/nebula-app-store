@@ -1,0 +1,117 @@
+{
+  // See https://go.microsoft.com/fwlink/?LinkId=733558
+  // for the documentation about the tasks.json format
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Run database",
+      "type": "docker-run",
+      "dockerRun": {
+        "image": "postgres:alpine",
+        "ports": [
+          {
+            "containerPort": 5432,
+            "hostPort": 5432
+          }
+        ],
+        "containerName": "nebula-db",
+        "env": {
+          "DATABASE_HOST": "127.0.0.1",
+          "POSTGRES_USER": "postgres",
+          "POSTGRES_PASSWORD": "docker",
+          "POSTGRES_PORT": "5432",
+          "POSTGRES_DB": "nebula"
+        },
+        "volumes": [
+          {
+            "localPath": "postgres-data",
+            "containerPath": "/var/lib/postgresql/data"
+          }
+        ],
+        "remove": true,
+      },
+      "runOptions": {
+        "runOn": "folderOpen",
+      },
+      "presentation": {
+        "group": "dev"
+      }
+    },
+    {
+      "label": "Run server (dev)",
+      "type": "npm",
+      "script": "dev",
+      "isBackground": true,
+      "problemMatcher": [
+        {
+          "pattern": [
+            {
+              "regexp": ".",
+              "file": 1,
+              "location": 2,
+              "message": 3
+            }
+          ],
+          "background": {
+            "activeOnStart": true,
+            "beginsPattern": "⚡Vite dev server running at:",
+            "endsPattern": "ready in \\d+ms"
+          }
+        }
+      ],
+      "presentation": {
+        "group": "dev",
+        "reveal": "never"
+      },
+      "runOptions": {
+        "runOn": "folderOpen",
+      }
+    },
+    {
+      "label": "Run database IDE",
+      "type": "npm",
+      "script": "db:view",
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": {
+        "group": "dev",
+        "reveal": "never"
+      },
+      "runOptions": {
+        "runOn": "folderOpen",
+      }
+    },
+    {
+      "label": "Generate database SQL",
+      "type": "npm",
+      "script": "db:generate",
+      "isBackground": true,
+      "problemMatcher": [],
+      "dependsOn": [
+        "Run database"
+      ],
+      "presentation": {
+        "group": "Database",
+        "reveal": "never"
+      }
+    },
+    {
+      "label": "Seed database",
+      "type": "npm",
+      "script": "db:seed",
+      "isBackground": true,
+      "problemMatcher": [],
+      "dependsOn": [
+        "Run database",
+        "Generate database SQL"
+      ],
+      "presentation": {
+        "group": "Database",
+        "reveal": "never"
+      },
+      "runOptions": {
+        "runOn": "folderOpen"
+      }
+    }
+  ]
+}

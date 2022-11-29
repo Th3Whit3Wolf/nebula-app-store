@@ -1,0 +1,24 @@
+{
+  "linter": {
+    "enabled": true,
+    "rules": {
+        "recommended": true,
+      "style": {
+        "useShorthandArrayType": "off"
+      }
+    }
+  },
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "tab",
+    "indentSize": 4,
+    "lineWidth": 120
+  },
+  "javascript": {
+    "formatter": {
+      "quoteProperties": "asNeeded",
+      "quoteStyle": "double",
+      "trailingComma": "none"
+    }
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "name": "nebula",
+  "scripts": {
+    "db:push": "prisma db push",
+    "db:generate": "prisma generate",
+    "db:seed": "tsx ./prisma/seeds",
+    "db:view": "prisma studio",
+    "dev": "solid-start dev",
+    "build": "solid-start build",
+    "start": "solid-start start",
+    "format": "rome format",
+    "lint": "rome check",
+    "lint:fix": "rome check --apply",
+    "typecheck": "tsc --noEmit"
+  },
+  "type": "module",
+  "devDependencies": {
+    "@iconify/json": "^2.1.140",
+    "@prisma/studio": "^0.477.0",
+    "@solidjs/testing-library": "^0.5.1",
+    "@testing-library/jest-dom": "^5.16.5",
+    "@types/color": "^3.0.3",
+    "@types/node": "^18.11.9",
+    "@types/testing-library__jest-dom": "^5.14.5",
+    "@unocss/preset-icons": "^0.46.5",
+    "@unocss/transformer-directives": "^0.46.5",
+    "@unocss/transformer-variant-group": "^0.46.5",
+    "jsdom": "^20.0.2",
+    "prisma": "^4.6.1",
+    "prisma-trpc-generator": "^0.6.1",
+    "rome": "^10.0.1",
+    "solid-start-node": "^0.2.1",
+    "ts-node": "^10.9.1",
+    "tsx": "^3.12.1",
+    "typescript": "^4.9.3",
+    "unocss": "^0.46.5",
+    "unocss-preset-astro": "^0.1.0",
+    "vite": "^3.1.0",
+    "vite-tsconfig-paths": "^3.6.0",
+    "vitest": "^0.25.2"
+  },
+  "dependencies": {
+    "@prisma/client": "^4.6.1",
+    "@solidjs/meta": "^0.28.0",
+    "@solidjs/router": "^0.5.0",
+    "@tanstack/solid-query": "^4.15.1",
+    "@trpc/client": "10.0.0-rc.2",
+    "@trpc/server": "10.0.0-rc.2",
+    "dotenv": "^16.0.3",
+    "solid-js": "^1.6.2",
+    "solid-start": "^0.2.5",
+    "solid-start-trpc": "^0.0.13",
+    "solid-trpc": "0.0.10-rc.1",
+    "solidjs-auth": "^0.0.8",
+    "trpc-openapi": "^0.7.0",
+    "undici": "5.11.0",
+    "zod": "^3.19.1"
+  },
+  "engines": {
+    "node": ">=18",
+    "pnpm": ">=7"
+  }
+}

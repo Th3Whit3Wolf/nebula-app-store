@@ -1,0 +1,101 @@
+{
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "strict": true,
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "jsxImportSource": "solid-js",
+    "resolveJsonModule": true,
+    "jsx": "preserve",
+    "types": [
+      "vite/client",
+      "node",
+      "@testing-library/jest-dom"
+    ],
+    "baseUrl": "./",
+    "paths": {
+      "~/*": [
+        "./src/*"
+      ],
+      "@ewokAssets": [
+        "./src/apps/ewok/assets"
+      ],
+      "@ewokAssets/*": [
+        "./src/apps/ewok/assets/*"
+      ],
+      "@ewokComponents": [
+        "./src/apps/ewok/components"
+      ],
+      "@ewokComponents/*": [
+        "./src/apps/ewok/components/*"
+      ],
+      "@ewokStores": [
+        "./src/apps/ewok/stores"
+      ],
+      "@ewokStores/*": [
+        "./src/apps/ewok/stores/*"
+      ],
+      "@ewokTypes": [
+        "./src/apps/ewok/types"
+      ],
+      "@ewokTypes/*": [
+        "./src/apps/ewok/types/*"
+      ],
+      "@ewokUtils": [
+        "./src/apps/ewok/utils"
+      ],
+      "@ewokUtils/*": [
+        "./src/apps/ewok/utils/*"
+      ],
+      "@components": [
+        "./src/components"
+      ],
+      "@components/*": [
+        "./src/components/*"
+      ],
+      "@env": [
+        "./src/env"
+      ],
+      "@env/*": [
+        "./src/env/*"
+      ],
+      "@server": [
+        "./src/server"
+      ],
+      "@server/*": [
+        "./src/server/*"
+      ],
+      "@stores": [
+        "./src/stores"
+      ],
+      "@stores/*": [
+        "./src/stores/*"
+      ],
+      "#types": [
+        "./src/types"
+      ],
+      "#types/*": [
+        "./src/types/*"
+      ],
+      "@utils": [
+        "./src/utils"
+      ],
+      "@utils/*": [
+        "./src/utils/*"
+      ],
+    }
+  },
+  "types": [
+    "vitest/globals",
+    "vite/client"
+  ],
+  "include": [
+    "./src",
+    "./types"
+  ],
+  "exclude": [
+    "dist/**"
+  ]
+}

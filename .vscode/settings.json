@@ -1,0 +1,45 @@
+{
+    "editor.formatOnSave": true,
+    "emmet.excludeLanguages": [],
+    "emmet.includeLanguages": {
+        "markdown": "html",
+        "javascript": "javascriptreact",
+        "typescript": "typescriptreact"
+    },
+    "emmet.showSuggestionsAsSnippets": true,
+    "emmet.triggerExpansionOnTab": true,
+    "files.exclude": {
+        "node_modules/**": true
+    },
+    "html.autoClosingTags": true,
+    "javascript.autoClosingTags": true,
+    "javascript.format.enable": true,
+    "javascript.inlayHints.functionLikeReturnTypes.enabled": true,
+    "javascript.inlayHints.parameterNames.enabled": "all",
+    "javascript.suggest.autoImports": true,
+    "javascript.suggest.completeFunctionCalls": true,
+    "javascript.validate.enable": true,
+    "npm.packageManager": "pnpm",
+    "search.exclude": {
+        "**/coverage": true,
+        "**/node_modules": true
+    },
+    "typescript.autoClosingTags": true,
+    "typescript.format.enable": true,
+    "typescript.inlayHints.functionLikeReturnTypes.enabled": true,
+    "typescript.inlayHints.parameterNames.enabled": "all",
+    "typescript.suggest.autoImports": true,
+    "typescript.suggest.completeFunctionCalls": true,
+    "typescript.validate.enable": true,
+    "[javascript][javascriptreact][typescript][typescriptreact]": {
+        "editor.defaultFormatter": "rome.rome",
+        "editor.codeActionsOnSave": {
+            "source.fixAll": true,
+            "source.organizeImports": true
+        }
+    },
+    "[prisma]": {
+        "editor.defaultFormatter": "Prisma.prisma"
+    },
+    "task.allowAutomaticTasks": "on",
+}

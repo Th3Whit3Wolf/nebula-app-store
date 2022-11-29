@@ -1,0 +1,408 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  name      String
+  createdAt DateTime @default(now())
+}
+
+enum Band {
+  TLF
+  ELF
+  SLF
+  ULF
+  VLF
+  LF
+  MF
+  HF
+  VHF
+  UHF
+  SHF
+  EHF
+  THF
+  L
+  S
+  C
+  X
+  Ku
+  K
+  Ka
+  V
+  W
+  MM  @map("mm")
+
+  /// Rename enum to bands to conform to
+  /// SQL naming conventions
+  @@map("bands")
+}
+
+enum Modulation {
+  EightQAM  @map("8QAM")
+  OneSixQAM @map("16QAM")
+  BPSK
+  QPSK
+
+  /// Rename enum to modulations to conform to
+  /// SQL naming conventions
+  @@map("modulations")
+}
+
+model Server {
+  id        Int      @id @default(autoincrement())
+  name      String   @db.VarChar(64)
+  startTime DateTime @default(now()) @map("start_time")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  /// One-to-Many Relationships
+  antennas           Antenna[]          @relation("AntennaServer")
+  actions            Action[]           @relation("ActionServer")
+  players            Player[]           @relation("PlayerServer")
+  receivers          Receiver[]         @relation("ReceiverServer")
+  transmitters       Transmitter[]      @relation("TransmitterServer")
+  spectrum_analyzers SpectrumAnalyzer[] @relation("SpectrumAnalyzerServer")
+  signals            Signal[]           @relation("SignalServer")
+  injects            Inject[]           @relation("InjectServer")
+
+  /// Rename table to servers to conform to
+  /// SQL naming conventions
+  @@map("servers")
+}
+
+model Team {
+  id        Int      @id @default(autoincrement())
+  name      String   @db.VarChar(64)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  /// One-to-Many Relationships
+  antennas           Antenna[]          @relation("AntennaTeam")
+  actions            Action[]           @relation("ActionTeam")
+  player             Player[]           @relation("PlayerTeam")
+  receivers          Receiver[]         @relation("ReceiverTeam")
+  transmitters       Transmitter[]      @relation("TransmitterTeam")
+  spectrum_analyzers SpectrumAnalyzer[] @relation("SpectrumAnalyzerTeam")
+
+  /// Rename table to teams to conform to
+  /// SQL naming conventions
+  @@map("teams")
+}
+
+model Target {
+  id        Int      @id @default(autoincrement())
+  name      String   @db.VarChar(64)
+  offset    Int
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  /// One-to-Many Relationships
+  antennas Antenna[] @relation("AntennaTarget")
+  signals  Signal[]  @relation("SignalTarget")
+
+  /// Rename table to targets to conform to
+  /// SQL naming conventions
+  @@map("targets")
+}
+
+model Antenna {
+  id          Int      @id @default(autoincrement())
+  unit        Int
+  operational Boolean  @default(false)
+  locked      Boolean  @default(false)
+  band        Band
+  offset      Float    @db.DoublePrecision
+  hpa         Boolean  @default(false)
+  loopback    Boolean  @default(false)
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at")
+
+  /// Define possible relationship with Server
+  /// Rename column to conform to SQL naming conventions
+  serverID Int?    @map("server_id")
+  server   Server? @relation("AntennaServer", fields: [serverID], references: [id], onDelete: SetNull)
+
+  /// Define possible relationship with Team
+  /// Rename column to conform to SQL naming conventions
+  teamID Int?  @map("team_id")
+  team   Team? @relation("AntennaTeam", fields: [teamID], references: [id], onDelete: SetNull)
+
+  /// Define possible relationship with Target
+  /// Rename column to conform to SQL naming conventions
+  targetID Int?    @map("target_id")
+  target   Target? @relation("AntennaTarget", fields: [targetID], references: [id], onDelete: SetNull)
+
+  /// One-to-Many Relationships
+  actions           Action[]           @relation("ActionAntenna")
+  receivers         Receiver[]         @relation("ReceiverAntenna")
+  transmitters      Transmitter[]      @relation("TransmitterAntenna")
+  spectrumAnalyzers SpectrumAnalyzer[] @relation("SpectrumAnalyzerAntenna")
+
+  /// Rename table to antennas to conform to
+  /// SQL naming conventions
+  @@map("antennas")
+}
+
+model Action {
+  id          Int      @id @default(autoincrement())
+  unit        Int
+  modemNumber Int      @map("modem_number")
+  operational Boolean  @default(false)
+  frequency   Float    @db.DoublePrecision
+  bandwidth   Float    @db.DoublePrecision
+  power       Float    @db.DoublePrecision
+  time        DateTime @default(now())
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at")
+
+  /// Define possible relationship with Server
+  /// Rename column to conform to SQL naming conventions
+  serverID Int?    @map("server_id")
+  server   Server? @relation("ActionServer", fields: [serverID], references: [id], onDelete: SetNull)
+
+  /// Define possible relationship with Team
+  /// Rename column to conform to SQL naming conventions
+  teamID Int?  @map("team_id")
+  team   Team? @relation("ActionTeam", fields: [teamID], references: [id], onDelete: SetNull)
+
+  /// Define possible relationship with Antenna
+  /// Rename column to conform to SQL naming conventions
+  antennaID Int?     @map("antenna_id")
+  antenna   Antenna? @relation("ActionAntenna", fields: [antennaID], references: [id], onDelete: SetNull)
+
+  /// Rename table to actions to conform to
+  /// SQL naming conventions
+  @@map("actions")
+}
+
+model Player {
+  id        Int      @id @default(autoincrement())
+  name      String   @db.VarChar(64)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  /// Define possible relationship with Server
+  /// Rename column to conform to SQL naming conventions
+  serverID Int?    @map("server_id")
+  server   Server? @relation("PlayerServer", fields: [serverID], references: [id], onDelete: SetNull)
+
+  /// Define possible relationship with Team
+  /// Rename column to conform to SQL naming conventions
+  teamID Int?  @map("team_id")
+  team   Team? @relation("PlayerTeam", fields: [teamID], references: [id], onDelete: SetNull)
+
+  /// Rename table to players to conform to
+  /// SQL naming conventions
+  @@map("players")
+}
+
+model Receiver {
+  id          Int        @id @default(autoincrement())
+  unit        Int
+  operational Boolean    @default(false)
+  frequency   Float      @db.DoublePrecision
+  bandwidth   Float      @db.DoublePrecision
+  number      Int
+  modulation  Modulation
+  fec         String
+  createdAt   DateTime   @default(now()) @map("created_at")
+  updatedAt   DateTime   @default(now()) @updatedAt @map("updated_at")
+
+  /// Define possible relationship with Server
+  /// Rename column to conform to SQL naming conventions
+  serverID Int?    @map("server_id")
+  server   Server? @relation("ReceiverServer", fields: [serverID], references: [id], onDelete: SetNull)
+
+  /// Define possible relationship with Team
+  /// Rename column to conform to SQL naming conventions
+  teamID Int?  @map("team_id")
+  team   Team? @relation("ReceiverTeam", fields: [teamID], references: [id], onDelete: SetNull)
+
+  /// Define possible relationship with Antenna
+  /// Rename column to conform to SQL naming conventions
+  antennaID Int?     @map("antenna_id")
+  antenna   Antenna? @relation("ReceiverAntenna", fields: [antennaID], references: [id], onDelete: SetNull)
+
+  /// Rename table to receivers to conform to
+  /// SQL naming conventions
+  @@map("receivers")
+}
+
+model Transmitter {
+  id           Int      @id @default(autoincrement())
+  unit         Int
+  modemNumber  Int      @map("modem_number")
+  operational  Boolean  @default(false)
+  frequency    Float    @db.DoublePrecision
+  bandwidth    Float    @db.DoublePrecision
+  power        Float    @db.DoublePrecision
+  transmitting Boolean  @default(false)
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @default(now()) @updatedAt @map("updated_at")
+
+  /// Define possible relationship with Server
+  /// Rename column to conform to SQL naming conventions
+  serverID Int?    @map("server_id")
+  server   Server? @relation("TransmitterServer", fields: [serverID], references: [id], onDelete: SetNull)
+
+  /// Define possible relationship with Team
+  /// Rename column to conform to SQL naming conventions
+  teamID Int?  @map("team_id")
+  team   Team? @relation("TransmitterTeam", fields: [teamID], references: [id], onDelete: SetNull)
+
+  /// Define possible relationship with Antenna
+  /// Rename column to conform to SQL naming conventions
+  antennaID Int?     @map("antenna_id")
+  antenna   Antenna? @relation("TransmitterAntenna", fields: [antennaID], references: [id], onDelete: SetNull)
+
+  /// Rename table to transmitters to conform to
+  /// SQL naming conventions
+  @@map("transmitters")
+}
+
+model SpectrumAnalyzer {
+  id          Int      @id @default(autoincrement())
+  unit        Int
+  number      Int
+  operational Boolean  @default(false)
+  frequency   Float    @db.DoublePrecision
+  span        Float    @db.DoublePrecision
+  marker1freq Float    @db.DoublePrecision
+  marker2freq Float    @db.DoublePrecision
+  trace       Boolean  @default(false)
+  rf          Boolean  @default(false)
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at")
+
+  /// Define possible relationship with Server
+  /// Rename column to conform to SQL naming conventions
+  serverID Int?    @map("server_id")
+  server   Server? @relation("SpectrumAnalyzerServer", fields: [serverID], references: [id], onDelete: SetNull)
+
+  /// Define possible relationship with Team
+  /// Rename column to conform to SQL naming conventions
+  teamID Int?  @map("team_id")
+  team   Team? @relation("SpectrumAnalyzerTeam", fields: [teamID], references: [id], onDelete: SetNull)
+
+  /// Define possible relationship with Team
+  /// Rename column to conform to SQL naming conventions
+  antennaID Int?     @map("antenna_id")
+  antenna   Antenna? @relation("SpectrumAnalyzerAntenna", fields: [antennaID], references: [id], onDelete: SetNull)
+
+  /// Rename table to spectrum_analyzers to conform to
+  /// SQL naming conventions
+  @@map("spectrum_analyzers")
+}
+
+model Signal {
+  id          Int        @id @default(autoincrement())
+  frequency   Float      @db.DoublePrecision
+  power       Float      @db.DoublePrecision
+  bandwidth   Float      @db.DoublePrecision
+  modulation  Modulation
+  fec         String
+  feed        String
+  operational Boolean    @default(false)
+  createdAt   DateTime   @default(now()) @map("created_at")
+  updatedAt   DateTime   @default(now()) @updatedAt @map("updated_at")
+
+  /// Define possible relationship with Server
+  /// Rename column to conform to SQL naming conventions
+  serverID Int?    @map("server_id")
+  server   Server? @relation("SignalServer", fields: [serverID], references: [id], onDelete: SetNull)
+
+  /// Define possible relationship with Team
+  /// Rename column to conform to SQL naming conventions
+  targetID Int?    @map("target_id")
+  target   Target? @relation("SignalTarget", fields: [targetID], references: [id], onDelete: SetNull)
+
+  /// One-to-Many Relationships
+  signal_saves SaveSignal[] @relation("SaveSignalSignal")
+
+  /// Rename table to signals to conform to
+  /// SQL naming conventions
+  @@map("signals")
+}
+
+model Inject {
+  id          Int      @id @default(autoincrement())
+  unit        Int
+  equipment   String
+  operational Boolean  @default(false)
+  time        DateTime @default(now())
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at")
+
+  /// Define possible relationship with Server
+  /// Rename column to conform to SQL naming conventions
+  serverID     Int?         @map("server_id")
+  server       Server?      @relation("InjectServer", fields: [serverID], references: [id], onDelete: SetNull)
+  save_injects SaveInject[] @relation("SaveInjectInject")
+
+  /// Rename table to injects to conform to
+  /// SQL naming conventions
+  @@map("injects")
+}
+
+model Save {
+  id        Int      @id @default(autoincrement())
+  name      String   @db.VarChar(64)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  /// One-to-Many Relationships
+  save_signals SaveSignal[] @relation("SaveSignalSave")
+  save_injects SaveInject[] @relation("SaveInjectSave")
+
+  /// Rename table to saves to conform to
+  /// SQL naming conventions
+  @@map("saves")
+}
+
+model SaveSignal {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  /// Define possible relationship with Save
+  /// Rename column to conform to SQL naming conventions
+  saveID Int?  @map("save_id")
+  save   Save? @relation("SaveSignalSave", fields: [saveID], references: [id], onDelete: SetNull)
+
+  /// Define possible relationship with Save
+  /// Rename column to conform to SQL naming conventions
+  signalID Int?    @map("signal_id")
+  signal   Signal? @relation("SaveSignalSignal", fields: [signalID], references: [id], onDelete: SetNull)
+
+  /// Rename table to saves_signals to conform to
+  /// SQL naming conventions
+  @@map("saves_signals")
+}
+
+model SaveInject {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  /// Define possible relationship with Save
+  /// Rename column to conform to SQL naming conventions
+  saveID Int?  @map("save_id")
+  save   Save? @relation("SaveInjectSave", fields: [saveID], references: [id], onDelete: SetNull)
+
+  /// Define possible relationship with Save
+  /// Rename column to conform to SQL naming conventions
+  injectID Int?    @map("inject_id")
+  inject   Inject? @relation("SaveInjectInject", fields: [injectID], references: [id], onDelete: SetNull)
+
+  /// Rename table to saves_injects to conform to
+  /// SQL naming conventions
+  @@map("saves_injects")
+}
